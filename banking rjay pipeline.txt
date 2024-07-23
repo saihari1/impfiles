@@ -1,0 +1,113 @@
+
+
+
+
+
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_HUB_CREDENTIALS_ID = 'dockercred' // ID of the Docker Hub credentials stored in Jenkins
+        DOCKER_HUB_USERNAME = 'saihari1' // Docker Hub username, can be set here or dynamically fetched
+        DOCKER_REPO = 'rjay'
+        DOCKER_IMAGE = 'banking'
+        TAG_NAME = 'latest'
+        AWS_DEFAULT_REGION = 'ap-southeast-2' // Set the AWS region for S3 upload
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    checkout scmGit(branches: [[name: '*/sit']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitCred', url: '']])
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Directory path where Maven should execute
+                dir('/var/lib/jenkins/workspace/Banking') {
+                    // Maven build command
+                    sh 'mvn clean install'
+                }
+            }
+        }
+        
+        stage('Upload to S3') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'awss3', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                    sh 'aws s3 cp /var/lib/jenkins/workspace/Banking/target/online-banking-0.0.1-SNAPSHOT.jar s3://demo-27/'
+                }
+            }
+        }
+        
+        stage('Build Docker image') {
+            steps {
+                // Directory path where Docker should execute
+                dir('/var/lib/jenkins/workspace/Banking') {
+                    // Docker build command
+                    sh "docker build -t ${DOCKER_IMAGE}:${TAG_NAME} ."
+                }
+            }
+        }
+        
+        stage('Tag Docker image') {
+            steps {
+                // Tag Docker image command
+                sh "docker tag ${DOCKER_IMAGE}:${TAG_NAME} ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${TAG_NAME}"
+            }
+        }
+        
+        stage('Push Docker image to Docker Hub') {
+            steps {
+                script {
+                    // Login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS_ID, usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        sh "echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin"
+                    }
+                    // Push the Docker image to Docker Hub
+                    sh "docker push ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${TAG_NAME}"
+                    // Pull the Docker image to verify
+                    sh "docker pull ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${TAG_NAME}"
+                }
+            }
+        }
+        
+        stage('Run Docker container') {
+            steps {
+                script {
+                    // Remove any existing container with the same name if running
+                    sh '''
+                        if [ $(docker ps -a -q -f name=banking_cont) ]; then
+                            docker rm -f banking_cont
+                        fi
+                    '''
+                    // Run a new container from the pulled image on a different port (e.g., 8090)
+                    sh "docker run -d --name banking_cont -p 8090:8080 ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${TAG_NAME}"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build successful! Deploy or continue with further stages.'
+            emailext (
+                to: "saichinnu2714@gmail.com",
+                subject: "Backend Pipeline Success Notification",
+                body: "The pipeline has successfully completed. Please find the attached console output.",
+                attachLog: true,
+            )
+        }
+        failure {
+            echo 'Build failed. Check the Jenkins console output for details.'
+            emailext (
+                to: "saichinnu2714@gmail.com",
+                subject: "Backend Pipeline Failure Notification",
+                body: "The pipeline has failed to complete. Please find the attached console output.",
+                attachLog: true,
+            )
+        }
+    }
+}

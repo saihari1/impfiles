@@ -1,0 +1,74 @@
+Sure, here's the updated cheatsheet with "m" series and "t" series added:
+
+1. **General Purpose**:
+   - **Instance Families**: t2, t3, t3a, t4g
+   - **Use Cases**: 
+     - Low to moderate CPU usage with occasional bursts.
+     - Development and testing environments.
+     - Web servers.
+     - Small to medium-sized databases.
+     - Microservices.
+
+2. **Compute Optimized**:
+   - **Instance Families**: c4, c5, c5a, c6g
+   - **Use Cases**:
+     - High-performance computing (HPC) applications.
+     - Compute-intensive workloads.
+     - Batch processing.
+     - Data analytics.
+     - Gaming servers.
+
+3. **Memory Optimized**:
+   - **Instance Families**: r4, r5, r5a, r6g
+   - **Use Cases**:
+     - In-memory databases (e.g., Redis, Memcached).
+     - Big data processing (e.g., Apache Spark).
+     - High-performance databases.
+     - Real-time analytics.
+     - SAP HANA.
+
+4. **Storage Optimized**:
+   - **Instance Families**: i3, i3en, d2
+   - **Use Cases**:
+     - NoSQL databases (e.g., Cassandra, MongoDB).
+     - Data warehousing.
+     - High-performance computing (HPC) with large datasets.
+     - Distributed file systems.
+     - Log processing and analysis.
+
+5. **Accelerated Computing**:
+   - **Instance Families**: p3, p4, g4, f1
+   - **Use Cases**:
+     - Machine learning (ML) inference and training.
+     - Video transcoding.
+     - Graphic-intensive applications.
+     - Financial modeling.
+     - Computational fluid dynamics (CFD).
+
+6. **Bare Metal**:
+   - **Instance Families**: i3.metal, r5.metal, etc.
+   - **Use Cases**:
+     - Workloads that require direct access to hardware resources.
+     - Legacy applications with hardware dependencies.
+     - Compliance requirements.
+     - High-performance computing (HPC) clusters.
+
+7. **Memory Optimized**:
+   - **Instance Families**: m4, m5, m5a, m5zn
+   - **Use Cases**:
+     - Enterprise applications.
+     - Medium to large databases.
+     - Content management systems (CMS).
+     - Application servers.
+     - Backend APIs.
+
+8. **Burstable Performance**:
+   - **Instance Families**: t2, t3, t3a, t4g
+   - **Use Cases**:
+     - Development and testing environments.
+     - Low to moderate traffic web applications.
+     - Small to medium-sized databases.
+     - Microservices.
+     - Non-production workloads.
+
+Each instance family has its own characteristics and is optimized for specific types of workloads. Make sure to choose the instance type that best fits your application's requirements in terms of compute power, memory, storage, and budget.

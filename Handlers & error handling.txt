@@ -1,0 +1,34 @@
+In a nutshell, handlers are special tasks that only get executed when triggered via the notify directive. Handlers are executed at the end of the play, once all tasks are finished.
+
+In Ansible, handlers are typically used to start, reload, restart, and stop services. If your playbook involves changing configuration files, there is a high chance that you’ll need to restart a service so that the changes take effect. In this case, you’ll need to define a handler for that service and include the notify directive in any tasks that require that service handler.
+
+
+
+error handling example :
+
+
+- name: Error handling
+  hosts: all
+  tasks:
+   - block:
+      - name: Install tomcat
+        yum:
+         name: tomat
+         state: present
+     rescue:
+      - name: Install nginx
+        yum:
+         name: nginx
+         state: present
+     always:
+      - name: Check url response
+        uri:
+         url: "{{item}}"
+        with_items:
+         - http://172.31.1.234
+
+In the above program, there are block, rescue & always.
+
+> block installs the tomcat package if there is any error in installing tomcat then it moves to rescue block and     executes it.
+
+> always block is executed everytime irrespective of the error.

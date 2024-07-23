@@ -1,0 +1,16 @@
+s3 code 
+
+
+
+
+
+stage('Upload to S3') {
+    environment {
+        AWS_DEFAULT_REGION = 'ap-southeast-2' // Set the AWS region
+    }
+    steps {
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWScred', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+            sh 'aws s3 cp /var/lib/jenkins/workspace/monolithic/ecommerce-multivendor-backend-master/target/ecommerce-backend-0.0.1-SNAPSHOT.jar s3://demo-27/'
+        }
+    }
+}

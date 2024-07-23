@@ -1,0 +1,97 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_CREDENTIALS_ID = 'dockercred' // ID of the Docker Hub credentials stored in Jenkins
+        DOCKER_HUB_USERNAME = 'saihari1' // Docker Hub username, can be set here or dynamically fetched
+        DOCKER_REPO = 'hari'
+        DOCKER_TAG = 'frontend' // Tag for the Docker image
+        AWS_DEFAULT_REGION = 'ap-southeast-2' // Set the AWS region for S3 upload
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from Git repository
+                git branch: 'master', url: ''
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Change to the frontend directory
+                dir('/var/lib/jenkins/workspace/frontend/ecommerce-multivendor-frontend-master') {
+                    // Cache npm dependencies to speed up subsequent builds
+                    dir('node_modules') {
+                        // If node_modules directory exists, delete it to avoid conflicts
+                        deleteDir()
+                    }
+                    // Install npm dependencies
+                    sh 'npm install'
+                    // Run npm build
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Build Docker image') {
+            steps {
+                script {
+                    dir('/var/lib/jenkins/workspace/frontend/ecommerce-multivendor-frontend-master') {
+                        // Ensure the Dockerfile path and build context are correct
+                        sh "docker build -t ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${DOCKER_TAG} ."
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker image to Docker Hub') {
+            steps {
+                script {
+                    // Login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS_ID, usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        sh "echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin"
+                    }
+                    // Push the Docker image to Docker Hub
+                    sh "docker push ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${DOCKER_TAG}"
+                    // Pull the Docker image from Docker Hub
+                    sh "docker pull ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${DOCKER_TAG}"
+                }
+            }
+        }
+
+        stage('Run Docker container') {
+            steps {
+                script {
+                    // Remove any existing container with the same name
+                    sh '''
+                        if [ $(docker ps -a -q -f name=ecommerce_frontend) ]; then
+                            docker rm -f ecommerce_frontend
+                        fi
+                    '''
+                    // Run a new container from the pulled image on a different port (e.g., 8082)
+                    sh "docker run -d --name ecommerce_frontend -p 8082:8080 ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${DOCKER_TAG}"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            emailext (
+                to: "saichinnu2714@gmail.com",
+                subject: "Frontend Pipeline Success Notification",
+                body: "The pipeline has successfully completed. Please find the attached console output.",
+                attachLog: true,
+            )
+        }
+        failure {
+            emailext (
+                to: "saichinnu2714@gmail.com",
+                subject: "Frontend Pipeline Failure Notification",
+                body: "The pipeline has failed to complete. Please find the attached console output.",
+                attachLog: true,
+            )
+        }
+    }
+}

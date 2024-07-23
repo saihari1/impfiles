@@ -1,0 +1,19 @@
+Ansible roles:
+
+Ansible roles are reusable, modular collections of Ansible resources that group related automation artifacts like tasks, variables, templates, and handlers into a standardized file structure. 
+
+They are defined using YAML files and have a predefined directory structure.
+
+>> They provide a skeleton for independent and reusable collections of variables, tasks, templates , files 
+   
+   and modules which can be automatically loaded into the playbooks.
+
+To create a role using galaxy we can use the following commands:
+
+>> ansible-galaxy init <role name>
+
+If we want to use the roles created by others, then we have to go to ansible galaxy.
+
+>> ansible-galaxy search <toolsyou want to install>
+
+>> ansible-galaxy install <author>.<rolename>

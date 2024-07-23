@@ -1,0 +1,3 @@
+TCP ensures reliable, ordered data delivery by establishing a connection, performing error correction, and retransmitting lost packets. 
+
+UDP, on the other hand, is a connectionless protocol that prioritizes speed and low overhead but does not guarantee reliable delivery or perform error correction.

@@ -1,0 +1,124 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_CREDENTIALS_ID = 'dockercred' // ID of the Docker Hub credentials stored in Jenkins
+        DOCKER_HUB_USERNAME = 'saihari1' // Docker Hub username, can be set here or dynamically fetched
+        DOCKER_REPO = 'hari'
+        DOCKER_TAG = 'backend' // Tag for the Docker image
+        AWS_DEFAULT_REGION = 'ap-southeast-2' // Set the AWS region for S3 upload
+    }
+
+    stages {
+        stage('Code commit') {
+            steps {
+                git branch: 'master', url: ''
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('/var/lib/jenkins/workspace/backend/ecommerce-multivendor-backend-master') {
+                    sh 'mvn clean package'
+                }
+            }
+        }
+
+        stage('Sonar Analysis') {
+            steps {
+                dir('/var/lib/jenkins/workspace/backend/ecommerce-multivendor-backend-master') {
+                    sh '''mvn sonar:sonar \
+                        -Dsonar.host.url=http://54.253.100.61:9000/ \
+                        -Dsonar.login= \
+                        -Dsonar.projectName=backend \
+                        -Dsonar.java.binaries=. \
+                        -Dsonar.projectKey=backend'''
+                }
+            }
+        }
+
+        stage('Dependency Check') {
+            steps {
+                dir('/var/lib/jenkins/workspace/backend/ecommerce-multivendor-backend-master') {
+                    sh 'mvn org.owasp:dependency-check-maven:6.5.3:check'
+                }
+            }
+        }
+
+        stage('OWASP Dependency Check') {
+            steps {
+                dir('/var/lib/jenkins/workspace/backend/ecommerce-multivendor-backend-master') {
+                    dependencyCheck additionalArguments: '--scan target/', odcInstallation: 'owasp', stopBuild: true
+                }
+            }
+        }
+
+        stage('Build Docker image') {
+            steps {
+                script {
+                    dir('/var/lib/jenkins/workspace/backend/ecommerce-multivendor-backend-master') {
+                        // Ensure the Dockerfile path and build context are correct
+                        sh "docker build -t ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${DOCKER_TAG} ."
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker image to Docker Hub') {
+            steps {
+                script {
+                    // Login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS_ID, usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        sh "echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin"
+                    }
+                    // Push the Docker image to Docker Hub
+                    sh "docker push ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${DOCKER_TAG}"
+                    // Pull the Docker image from Docker Hub
+                    sh "docker pull ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${DOCKER_TAG}"
+                }
+            }
+        }
+
+        stage('Run Docker container') {
+            steps {
+                script {
+                    // Remove any existing container with the same name
+                    sh '''
+                        if [ $(docker ps -a -q -f name=ecommerce_container) ]; then
+                            docker rm -f ecommerce_container
+                        fi
+                    '''
+                    // Run a new container from the pulled image on a different port (e.g., 8082)
+                    sh "docker run -d --name ecommerce_container -p 8083:8080 ${DOCKER_HUB_USERNAME}/${DOCKER_REPO}:${DOCKER_TAG}"
+                }
+            }
+        }
+
+        stage('Upload to S3') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: '', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                    sh 'aws s3 cp /var/lib/jenkins/workspace/backend/ecommerce-multivendor-backend-master/target/ecommerce-backend-0.0.1-SNAPSHOT.jar s3://demo-27/'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            emailext (
+                to: "saichinnu2714@gmail.com",
+                subject: " Backend Pipeline Success Notification",
+                body: "The pipeline  has successfully completed. Please find the attached console output.",
+                attachLog: true,
+            )
+        }
+        failure {
+            emailext (
+                to: "saichinnu2714@gmail.com",
+                subject: "Backend Pipeline Failure Notification",
+                body: "The pipeline has failed to complete. Please find the attached console output.",
+                attachLog: true,
+            )
+        }
+    }
+}

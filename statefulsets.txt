@@ -1,0 +1,51 @@
+statefulsets:
+
+
+> used for stateful apps.
+
+> Stateful apps means any application that stores data to keep track of the state of the application.
+
+	ex: MySQL, Elastic search , Mongo DB .
+
+
+
+Deployments                                       					  STatefulsets
+
+> the replica pods in deployments					> The replica pods are not deleted                 randomly.
+  can be deleted randomly.							
+
+> The pods in the deployments are all					> Each pod in the replica set has its own 
+  identical.								  identity.
+
+> can be created and deleted at the same time.				> can't be created and deleted at the same 
+									  time.
+
+
+Why is this identity is necessary in statefulsets ?
+
+>>  It is useful for scaling database apps.
+
+>> It has master and slaves config.
+
+>> Master has both read and write access but the slaves has only read access.
+
+>> These slaves always in sync with the data updated by master.
+
+>> Each master and slaves use their own volumes but not shared physical storage.
+
+>> Whenever a new pod gets created then it clones the data from the previous pod and in sync with the master.
+
+>> In stateful sets if we mentions 3 replicas, then initially 1 replica is created if that that replica is up and     
+
+   running then only remaining replicas are created .
+
+>> Re plicas are created only based on the state of previous pod. If it's in pending/not created then the replicas 
+
+   won't be created.
+ 
+
+
+  		Ex:   Deletion/ scaledown of statefulsets  take from last pod
+
+			suppose if we have 3 pods , they get deleted in the order 3>2>1.
+

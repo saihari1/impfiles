@@ -1,0 +1,70 @@
+Git COmmands:
+
+
+nohup java -jar your-application.jar > output.log 2>&1 &
+
+
+[root@ip-172-31-9-241 Banking-project]# git switch sit
+M       src/main/resources/application.properties
+M       src/main/resources/db/migration/V3__20200405_Init_User_Tables_Data.sql
+M       src/main/resources/db/migration/V7__20200405_Init_Role_Tables_Data.sql
+M       src/main/resources/sql/V2__20190307_Init_Data_Online_Banking.sql
+M       src/main/resources/templates/appointment.html
+Switched to branch 'sit'
+
+
+
+
+
+
+
+
+git config user.name "Anji"
+git config user.email "anji061899@gmail.com"
+git init
+git add <file name > ---- git add . (Nano)
+git stash ----hide the file
+git stash pop ----unhide the file
+git commit -m "message"       
+git remote add origin <remote repo URL> 
+git push -u origin (branch name)master---  -f
+
+
+
+ls -al-----shows the git files
+cat>filename --enter--ctrl D------write the content
+touch anji{1..5}.text --- it will create 5 file 
+git remote -v --- it shows the curent gitrepo
+git remote remove origin ----remove the attached repo
+git show [commit] ----- This command shows the metadata and content changes of the specified commit.
+
+git restore --staged anji1(file name) and  git rm --cached anji
+ -----it will come again un-tracked file after git add
+git restore --staged . ---------------------it will come all un-tracked files
+git commit -m "anji commits" anji* ------it will commit all files
+.gitignore ------- it will be ignore the file (files not add & not commit)
+rm -rf * ---------remove all files
+git push <remote-name> --delete <branch-name>  -----delete the remote branch
+
+
+
+git branch ---List branch
+git branch -a ----List all branches (local and remote)
+git branch <branch name> ---create a branch
+git checkout -b [branch name] --Create a new branch and switch to it
+git branch -d [branch name] ---Delete a branch
+git push origin -delete <branch name> ---Delete a Remote Branch
+git checkout<branch name> ----Switch to a Branch
+git branch -m <old branch name><new branch name> ---Rename branch
+git merge [branch name]---Merge a branch into the active branch
+git log  ----View changes
+git log --summary---View changes(detailed)
+git log --oneline----View changes(briefly)
+
+
+
+git remote -v
+git remote add origin url
+git fetch origin
+git checkout main
+git pull origin main

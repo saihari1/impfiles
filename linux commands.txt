@@ -1,0 +1,107 @@
+1.ls
+Purpose: Lists directory contents.
+Usage: ls [options] [directory]
+Examples:
+ls: Lists files and directories in the current directory.
+ls -l: Long listing format, showing detailed information about files.
+ls -a: Lists all files, including hidden files (those starting with .).
+ls -lh: Long listing format with human-readable file sizes.
+
+2. cd
+Purpose: Changes the current directory.
+Usage: cd [directory]
+Examples:
+cd /var/log: Changes directory to /var/log.
+cd ..: Moves one directory up (to the parent directory).
+cd ~: Changes directory to the home directory of the current user.
+
+3. pwd
+Purpose: Prints the current working directory.
+Usage: pwd
+Example:
+pwd: Outputs the current directory path, e.g., /home/user.
+
+4. mkdir
+Purpose: Creates a new directory.
+Usage: mkdir [options] directory_name
+Examples:
+mkdir myfolder: Creates a directory named myfolder in the current directory.
+mkdir -p path/to/folder: Creates nested directories (-p option ensures parent directories are also created if they don't exist).
+
+5. rm
+Purpose: Removes files or directories.
+Usage: rm [options] file(s)/directory
+Examples:
+rm file.txt: Deletes the file named file.txt.
+rm -r myfolder: Recursively deletes the directory myfolder and all its contents (-r for recursive).
+rm -f file.txt: Forcefully deletes file.txt without confirmation (-f for force).
+
+6. cp
+Purpose: Copies files and directories.
+Usage: cp [options] source_file/directory destination_file/directory
+Examples:
+cp file.txt /path/to/destination/: Copies file.txt to /path/to/destination/.
+cp -r folder1 folder2: Copies folder1 and its contents recursively to folder2.
+
+7. mv
+Purpose: Moves (or renames) files and directories.
+Usage: mv [options] source destination
+Examples:
+mv file.txt newfile.txt: Renames file.txt to newfile.txt.
+mv file.txt /path/to/destination/: Moves file.txt to /path/to/destination/.
+
+8. grep
+Purpose: Searches for patterns in files.
+Usage: grep [options] pattern [file(s)]
+Examples:
+grep "error" logfile.txt: Searches for lines containing the word "error" in logfile.txt.
+grep -r "function()" /path/to/search: Recursively searches for files containing the pattern function() in /path/to/search.
+
+9. find
+Purpose: Searches for files and directories based on various criteria.
+Usage: find [path] [options] [expression]
+Examples:
+find /home/user -name "*.txt": Finds all .txt files in /home/user.
+find . -type f -size +10M: Finds files larger than 10MB in the current directory (.).
+
+10. chmod
+Purpose: Changes file permissions.
+Usage: chmod [options] mode file(s)
+Examples:
+chmod +x script.sh: Adds execute permission to script.sh.
+chmod 644 file.txt: Sets read and write permissions for the owner and read-only permissions for group and others.
+
+11. chown
+Purpose: Changes file ownership.
+Usage: chown [options] new_owner[:new_group] file(s)
+Examples:
+chown user1 file.txt: Changes ownership of file.txt to user1.
+chown -R user1:group1 directory: Recursively changes ownership of directory and all its contents to user1 and group1.
+
+12. tar
+Purpose: Manipulates tar archives.
+Usage: tar [options] [tarfile] [files/directories]
+Examples:
+tar -czvf archive.tar.gz directory: Creates a compressed tar archive (c for create, z for gzip compression).
+tar -xvf archive.tar.gz: Extracts files from archive.tar.gz.
+tar -tvf archive.tar.gz: Lists contents of archive.tar.gz.
+
+13. wget
+Purpose: Downloads files from the web.
+Usage: wget [options] url
+Examples:
+wget https://example.com/file.zip: Downloads file.zip from https://example.com.
+wget -r -np https://example.com: Recursively downloads all files from https://example.com without going to parent directories (-r for recursive, -np for no parent).
+14. curl
+Purpose: Transfers data from or to a server.
+Usage: curl [options] url
+Examples:
+curl https://example.com: Retrieves the content of https://example.com.
+curl -O https://example.com/file.zip: Downloads file.zip from https://example.com and saves it with the same name locally (-O).
+
+15. df
+Purpose: Displays disk space usage.
+Usage: df [options] [file(s) or directory]
+Examples:
+df -h: Displays disk usage in human-readable format.
+df -h /dev/sda1: Displays disk usage for the /dev/sda1 partition.

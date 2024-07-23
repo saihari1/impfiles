@@ -1,0 +1,43 @@
+Ansible playbook to install java 17 and maven 3.9.7
+
+
+---
+---
+- name: Install Java 17 and Maven 3.9.7
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Java 17 (OpenJDK)
+      yum:
+        name: java-17-amazon-corretto-devel
+        state: present
+
+    - name: Download Maven
+      get_url:
+        url: "https://apache.osuosl.org/maven/maven-3/3.9.7/binaries/apache-maven-3.9.7-bin.tar.gz"
+        dest: /tmp/apache-maven-3.9.7-bin.tar.gz
+
+    - name: Extract Maven
+      unarchive:
+        src: /tmp/apache-maven-3.9.7-bin.tar.gz
+        dest: /opt
+        remote_src: yes
+        creates: /opt/apache-maven-3.9.7
+
+    - name: Set symbolic link for Maven
+      file:
+        src: /opt/apache-maven-3.9.7
+        dest: /opt/maven
+        state: link
+
+    - name: Set environment variables for Maven
+      lineinfile:
+        dest: /etc/profile.d/maven.sh
+        line: 'export PATH=$PATH:/opt/maven/bin'
+        create: yes
+
+    - name: Load the Maven environment variables
+      shell: source /etc/profile.d/maven.sh
+      args:
+        executable: /bin/bash
+...
