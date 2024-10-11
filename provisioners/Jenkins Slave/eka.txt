@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-module-deployment
+spec:
+  replicas: 3  # Adjust as needed
+  selector:
+    matchLabels:
+      app: multi-module
+  template:
+    metadata:
+      labels:
+        app: multi-module
+    spec:
+      containers:
+        - name: Eureka
+          image: bhargavrjaytech/eureka:latest
+          ports:
+            - containerPort: 8761  # Adjust port as needed
+          # Add other container configuration (env, resources, etc.)
+        - name: admin
+          image: bhargavrjaytech/admin:latest
+          ports:
+            - containerPort: 2022  # Adjust port as needed
+          # Add other container configuration (env, resources, etc.)
+        - name: announcement
+          image:  bhargavrjaytech/announcement:latest
+          ports:
+            - containerPort: 2020  # Adjust port as needed
+          # Add other container configuration (env, resources, etc.)
+        - name: attendence
+          image:  bhargavrjaytech/attendence:latest
+          ports:
+            - containerPort: 1998  # Adjust port as needed
+          # Add other container configuration (env, resources, etc.)
+        - name: document
+          image:  bhargavrjaytech/document:latest
+          ports:
+            - containerPort: 9999  # Adjust port as needed
+          # Add other container configuration (env, resources, etc.)
+        - name: gateway
+          image:  bhargavrjaytech/gateway:latest
+          ports:
+            - containerPort: 2030  # Adjust port as needed
+          # Add other container configuration (env, resources, etc.)
+        - name: payment
+          image:  bhargavrjaytech/payment:latest
+          ports:
+            - containerPort: 2025  # Adjust port as needed
+          # Add other container configuration (env, resources, etc.)
+        - name: request
+          image:  bhargavrjaytech/requestsandcomplaint:latest
+          ports:
+            - containerPort: 2021  # Adjust port as needed
+          # Add other container configuration (env, resources, etc.)
+        - name: auth
+          image:  bhargavrjaytech/authservice:latest
+          ports:
+            - containerPort: 2055  # Adjust port as needed
+          # Add other container configuration (env, resources, etc.)
