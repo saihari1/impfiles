@@ -1,0 +1,48 @@
+# Update package index 
+
+sudo yum update -y 
+
+# Install Java (JDK 11) 
+
+sudo amazon-linux-extras install java-openjdk11 -y 
+
+# Download Maven 3.9.7
+
+ wget https://dlcdn.apache.org/maven/maven-3/3.9.7/binaries/apache-maven-3.9.7-bin.tar.gz 
+
+# Extract the archive
+
+ sudo tar -xvzf apache-maven-3.9.7-bin.tar.gz -C /opt 
+
+# Create a symbolic link
+
+ sudo rm -f /usr/bin/mvn sudo ln -s /opt/apache-maven-3.9.7/bin/mvn /usr/bin/mvn 
+
+# Set up environment variables
+
+ sudo tee /etc/profile.d/maven.sh <<EOF export M2_HOME=/opt/apache-maven-3.9.7 export MAVEN_HOME=/opt/apache-maven-3.9.7 export PATH=\${M2_HOME}/bin:\${PATH} EOF
+
+# Make the script executable 
+
+sudo chmod +x /etc/profile.d/maven.sh 
+
+# Load the environment variables
+
+source /etc/profile.d/maven.sh
+
+ # Verify Maven installation
+
+ mvn -v
+
+
+
+
+
+# Update package index
+sudo yum update -y
+
+# Install Java 17 (Amazon Corretto)
+sudo yum install -y java-17-amazon-corretto-devel
+
+# Verify the installation
+java -version

@@ -1,0 +1,23 @@
+Hello man !!!
+
+
+#!/bin/bash
+yum install httpd -y
+service httpd start
+chkconfig httpd on
+mkdir /var/www/html/prime
+echo "<html><h1>Welcome to Amazon Prime</h1></html>">/var/www/html/prime/index.html
+
+#!/bin/bash
+yum install httpd -y
+service httpd start
+chkconfig httpd on
+mkdir /var/www/html/netflix
+echo "<html><h1>Welcome to Netflix</h1></html>">/var/www/html/netflix/index.html
+
+#!/bin/bash
+yum install httpd -y
+service httpd start
+chkconfig httpd on
+mkdir /var/www/html/hotstar
+echo "<html><h1>Welcome to Hotstar</h1></html>">/var/www/html/hotstar/index.html

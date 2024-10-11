@@ -1,0 +1,43 @@
+In Ansible,
+
+create master and nodes.
+
+after that perform these in nodes
+      
+	sudo useradd ansible
+	sudo passwd ansible
+	sudo visudo
+	sudo vi /etc/ssh/sshd-cnfg
+ 	sudo systemctl restart sshd
+
+Connect to master and perform these
+
+	ssh-keygen
+	try to copy the keys to nodes using    ssh-copy-id username@private ip of node1
+					       ssh-copy-id username@private ip of node2
+
+add node ips to the host file  "sudo vi /etc/ansible/hosts"
+
+Test the nodes once by connecting "ssh private ip"
+
+run the adhoc commands if they are not performed/permission denied. Manually copy the key in the nodes.
+
+			cd .ssh/
+			copy the pub key
+                        paste this same key in the nodes(.ssh/authorised keys)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ansible all -b -m command -a "amazon-linux-extras install -y docker"

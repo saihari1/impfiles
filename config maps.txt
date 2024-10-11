@@ -1,0 +1,24 @@
+config maps & secrets 
+
+
+Kubernetes RBAC is a key security control to ensure that cluster users and workloads have only the access to resources required to execute their roles.
+
+
+
+> config maps can be used to store data. This data can be later used by the pods.
+
+>  Config Maps in Kubernetes are designed to hold configuration data for your Pods. They are API objects that contain key-value pairs.
+
+
+Why would you use a ConfigMap in Kubernetes?
+
+Use a ConfigMap to keep your application code separate from your configuration.
+
+
+> if you have non sensitive data storing in config maps is best preferred.
+
+> if you have sensitive data, you have to store it in secrets.
+
+Both configmaps and secrets are used to store or pass the info. secrets are encrypted as they have sensitive data & they enforce a strong RBAC(Role Based Access Control).
+
+>

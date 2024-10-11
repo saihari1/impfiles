@@ -1,15 +1,15 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "ap-southeast-2"
 }
 
 variable "instance_name" {
   type    = string
-  default = "live-test-instance"
+  default = "master"
 }
 
 variable "ami_id" {
   type    = string
-  default = "ami-0735c191cf914754d"
+  default = "ami-03f0544597f43a91d"
 }
 
 variable "instance_type" {
@@ -19,12 +19,12 @@ variable "instance_type" {
 
 variable "key_name" {
   type    = string
-  default = "k8s-key"
+  default = "kube"
 }
 
 variable "security_group_ids" {
   type    = list(string)
-  default = ["sg-01ce819e8d65269f0"]
+  default = ["sg-0d69391bb427be5ad"]
 }
 
 variable "instance_count" {
@@ -34,7 +34,7 @@ variable "instance_count" {
 
 variable "subnet_ids" {
   type    = list(string)
-  default = ["subnet-058a7514ba8adbb07", "subnet-0dbcd1ac168414927", "subnet-032f5077729435858"]
+  default = ["subnet-0b9b2c89b4cc0f290", "subnet-094f8e4ea31ec571c", "subnet-0dd7a19b1a941dc18"]
 }
 
 variable "inbound_from_port" {

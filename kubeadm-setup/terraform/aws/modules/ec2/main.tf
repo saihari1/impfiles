@@ -1,5 +1,5 @@
 resource "aws_security_group" "instance-sg" {
-  name        = "k8s Node SG"
+  name        = "Kube"
   description = "SG for Kubeadm Nodes"
 
   dynamic "ingress" {

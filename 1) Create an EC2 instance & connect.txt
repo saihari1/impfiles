@@ -1,0 +1,27 @@
+1) Create an EC2 instance & connect to Amazon Linux.
+
+2) Try these commands on Amazon Linux 
+
+sudo yum install -y yum-utils shadow-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+sudo yum -y install terraform
+
+3)check the terraform version after installing it.
+
+4) Apply the following commands
+    
+   aws configure
+
+5) It will ask access key and secret key . Enter them for the access of your aws account to create infra using terraform.
+
+6) Make a directory with a name. Here i'm creating terraform
+
+    mkdir terraform
+
+7) create a main.tf file using the command.
+
+    vi main.tf
+
+8)press I for inserting the code. Write the code 
+
+9)

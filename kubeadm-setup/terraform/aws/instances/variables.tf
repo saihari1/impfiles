@@ -1,9 +1,9 @@
 variable "ami_id" {
   type    = string
-  default = "ami-04b70fa74e45c3917"
+  default = "ami-03f0544597f43a91d"
 }
 
 variable "subnet_ids" {
   type    = list(string)
-  default = ["subnet-0578640ffb3d497fe", "subnet-01483b41d7300ff42", "subnet-096b78110a39a544e"]
+  default = ["subnet-0b9b2c89b4cc0f290", "subnet-094f8e4ea31ec571c","subnet-0dd7a19b1a941dc18"]
 }
